@@ -1,23 +1,30 @@
 # Handy TTS
 
-Local neural text-to-speech for Nuclear Option game chat: every player gets a
-stable, distinct voice. Runs fully offline on your PC — no accounts, no cloud.
+Local neural-net text-to-speech for Nuclear Option game chat: every player
+gets a stable, distinct voice — same across servers, even if they change
+their name. The voice stays the same, so you can disable the player-name
+announcer at the beginning of every line and just recognize players by their
+voices. Runs fully offline on your PC, fully CPU, negligible performance
+impact.
 
 Pick **Handy TTS Lite** instead if you want the game's own voice, just faster
 and cleaner, with zero downloads beyond kilobytes. Only ever run one of them.
 
 ## What it does
 
-- Speaks chat lines with a local neural voice (904 speakers) instead of the
-  stock voice, suppressing the game's own speech while enabled.
+- Speaks chat lines with a local neural voice (904 voices) instead of the
+  stock voice — randomly assigned to players, or assigned by you —
+  suppressing the game's own speech while enabled.
 - Remembers each player by SteamID: stable voice, mute, and rename across
   servers and sessions.
-- Says who is talking (`<name> says:`) with a separate announcer voice that
-  stays quiet unless the speaker is new or 20 seconds passed.
+- Says who is talking (`<name> says:`) if enabled, with a separate announcer
+  voice that stays quiet unless the speaker is new or 20 seconds passed, so
+  you don't hear "name says:" every 2 seconds when someone spams. Turn the
+  announcer off entirely and identify players by voice alone.
 - Fixes chat slang/typos before speaking (`expansions.txt`, editable) and
   pronounces game terms right (`pronounce.txt`, editable). Chat on screen is
   never touched.
-- Speeds up under flood so speech catches up with chat; never drops messages.
+- Speeds up when needed so speech catches up with chat; never drops messages.
 - Scoreboard right-click: Assign TTS / Mute TTS / Rename TTS per player.
 - Chat commands: `/tvoice /tmute /tunmute /tname /thelp`.
 - Speech audit log of everything spoken (see Bug reports).
@@ -31,10 +38,35 @@ and cleaner, with zero downloads beyond kilobytes. Only ever run one of them.
 
 ## Options (F1 config menu)
 
-General: Enabled, SpeakOwnDev (hear your own lines), LogLevel.
-Voice: Announce, AnnouncerSid (0–903), Speed, Volume (own gain), Noise,
-Variation, Pauses, OwnSid (-1 = automatic).
-Queue: CatchUpSec. Storage: ModelDir, PruneDays, LogDays.
+**General**
+- Enabled — master switch. Off = mod fully idle, game speech behaves stock.
+- SpeakOwnDev — also speak your own messages (off by default; mostly for
+  testing your setup).
+- LogLevel — 0 = errors only, 1 = normal, 2 = per-message debug trace.
+  Set to 2 only when collecting a bug report, then back to 1.
+
+**Voice**
+- AnnounceNames — speak `<name> says:` before lines (on by default). Turn it
+  OFF to play announcer-free: every player keeps their own stable voice, so
+  you learn who's talking by sound alone.
+- AnnouncerSid — which of the 904 voices reads the names (0–903, default 1).
+- Speed — base speaking rate, 0.5–2 (default 1).
+- Volume — our own output gain, 0–2 (2 = 200%).
+- Noise — phoneme randomness, 0–1.5 (default 0.5; lower = steadier voice).
+- Variation — expressiveness variation, 0–1.5 (default 1).
+- Pauses — pause length at punctuation, 0–1 (default 1).
+- OwnSid — your own voice, -1 = automatic (range -1–903).
+
+**Queue**
+- CatchUpSec — how many seconds of speech backlog before the rate ramps up
+  to catch up (2–30, default 3).
+
+**Storage**
+- LogDays — keep the speech audit log this many days, 0–30 (default 7,
+  0 = off).
+- PruneDays — forget players unseen for this many days, 0–3650
+  (default 1825 = 5 years, 0 = never).
+- ModelDir — Piper model folder; empty = the `data/` folder next to the DLL.
 
 ## Bug reports
 
