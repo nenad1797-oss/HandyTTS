@@ -46,6 +46,16 @@ Set F1 → LogLevel = 2, reproduce, then send:
 Set LogLevel back to 1 afterwards. `tts-log.txt` contains chat text you heard
 plus player names — only share it if you are comfortable sharing that session.
 
+## Known issues (v1.0.0)
+
+- **Rename popup vs chat focus:** while typing a name in the Rename TTS
+  popup, pressing SPACE or `-` hands focus to the game chat and the popup
+  can't be refocused. Use one-word names for now (no spaces or dashes); if
+  chat steals focus, close it and reopen the menu. Fix planned.
+- **Short own-message echo:** very short own messages (under 6 characters)
+  are occasionally spoken twice (your send + the server echo). Minor; fix
+  planned.
+
 ## Build from source
 
 `dotnet build -c Release` (needs the game's DLLs; see HintPaths in the
