@@ -25,7 +25,8 @@ and cleaner, with zero downloads beyond kilobytes. Only ever run one of them.
   pronounces game terms right (`pronounce.txt`, editable). Chat on screen is
   never touched.
 - Speeds up when needed so speech catches up with chat; never drops messages.
-- Scoreboard right-click: Assign TTS / Mute TTS / Rename TTS per player.
+- Scoreboard right-click per player: Assign TTS voice / Mute TTS voice /
+  Rename TTS voice (shown in-game as Assign TTS / Mute TTS / Rename TTS).
 - Chat commands: `/tvoice /tmute /tunmute /tname /thelp`.
 - Speech audit log of everything spoken (see Bug reports).
 
@@ -87,6 +88,9 @@ plus player names — only share it if you are comfortable sharing that session.
 - **Short own-message echo:** very short own messages (under 6 characters)
   are occasionally spoken twice (your send + the server echo). Minor; fix
   planned.
+- **No voices at all:** check `LogOutput.log` for `Piper engine failed` — you
+  likely need the Microsoft Visual C++ Redistributable (x64), free from
+  Microsoft. Install it, relaunch, done.
 
 ## Build from source
 
