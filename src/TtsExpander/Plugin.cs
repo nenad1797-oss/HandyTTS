@@ -13,7 +13,7 @@ namespace TtsExpander
 #if LITE
     [BepInPlugin("com.MrNoHands.tts-lite", "TTS Lite", "1.0.0")]
 #else
-    [BepInPlugin("com.MrNoHands.tts-expander", "TTS Expander", "1.0.0")]
+    [BepInPlugin("com.MrNoHands.tts-expander", "TTS Expander", "1.0.1")]
 #endif
     public class Plugin : BaseUnityPlugin
     {
@@ -25,7 +25,7 @@ namespace TtsExpander
 #if LITE
             Log.LogInfo("TTS Lite v1.0.0 starting.");
 #else
-            Log.LogInfo("TTS Expander v1.0.0 starting.");
+            Log.LogInfo("TTS Expander v1.0.1 starting.");
 #endif
 
             ModConfig.Bind(Config);
@@ -57,8 +57,7 @@ namespace TtsExpander
             Expansions.Init(Path.Combine(dir, "expansions.txt"));
             Pronounce.Init(Path.Combine(dir, "pronounce.txt"));
             TtsLog.Init(Path.Combine(dir, "tts-log.txt"), ModConfig.LogDays.Value,
-                $"TTS Expander v1.0.0 Enabled={ModConfig.Enabled.Value} Speed={ModConfig.SpeedBase.Value} Announce={ModConfig.Announce.Value}");
-
+                $"TTS Expander v1.0.1 Enabled={ModConfig.Enabled.Value} Speed={ModConfig.SpeedBase.Value} Announce={ModConfig.Announce.Value}");
             try
             {
                 var harmony = new Harmony("com.MrNoHands.tts-expander");
@@ -111,6 +110,9 @@ namespace TtsExpander
         public static ConfigEntry<string> LiteStatus;
 #else
         public static ConfigEntry<bool> SpeakOwn;
+        public static ConfigEntry<bool> TestNow;
+        public static ConfigEntry<bool> SpeakServer;
+        public static ConfigEntry<string> FullStatus;
         public static ConfigEntry<int> AnnouncerSid;
         public static ConfigEntry<bool> Announce;
         public static ConfigEntry<float> SpeedBase;
@@ -129,7 +131,7 @@ namespace TtsExpander
         {
             Enabled = cfg.Bind("General", "Enabled", true, "Master switch.");
             LogLevel = cfg.Bind("General", "LogLevel", 1, new ConfigDescription("0 = errors only, 1 = normal, 2 = debug trace.", new AcceptableValueRange<int>(0, 2)));
-            CatchUpSec = cfg.Bind("Queue", "CatchUpSec", 3.0f, new ConfigDescription("Backlog seconds before speed ramps up.", new AcceptableValueRange<float>(2f, 30f)));
+            CatchUpSec = cfg.Bind("Queue", "CatchUpSec", 6.0f, new ConfigDescription("Backlog seconds before speed ramps up.", new AcceptableValueRange<float>(2f, 30f)));
             LogDays = cfg.Bind("Storage", "LogDays", 7, new ConfigDescription("Keep TTS speech log this many days (0 = off).", new AcceptableValueRange<int>(0, 30)));
 #if LITE
             CatchUpMax = cfg.Bind("Queue", "CatchUpMax", 2.0f, new ConfigDescription("Speed cap while catching up.", new AcceptableValueRange<float>(1f, 3f)));
@@ -139,10 +141,13 @@ namespace TtsExpander
             LiteStatus = cfg.Bind("General", "Status", "", "Live driver state (read-only).");
             SpeakServer = cfg.Bind("General", "SpeakServer", true, "Speak lines from sender 'server' (notices, relays).");
 #else
-            SpeakOwn = cfg.Bind("General", "SpeakOwnDev", false, "Also speak my own messages.");
+            SpeakOwn = cfg.Bind("General", "HearMyMessages", true, "Also speak my own messages.");
+            TestNow = cfg.Bind("General", "TestNow", false, "Set TRUE for a test line (auto-resets).");
+            SpeakServer = cfg.Bind("General", "SpeakServerAnnouncements", true, "Speak server lines (notices, broadcasts) when the server sends them.");
+            FullStatus = cfg.Bind("General", "Status", "", "Live driver state (read-only).");
             Announce = cfg.Bind("Voice", "AnnounceNames", true, "Speak '<name> says:' before each message.");
             AnnouncerSid = cfg.Bind("Voice", "AnnouncerSid", 1, new ConfigDescription("Voice for the '<name> says:' prefix.", new AcceptableValueRange<int>(0, 903)));
-            SpeedBase = cfg.Bind("Voice", "Speed", 1.0f, new ConfigDescription("Base speaking speed.", new AcceptableValueRange<float>(0.5f, 2f)));
+            SpeedBase = cfg.Bind("Voice", "Speed", 0.75f, new ConfigDescription("Base speaking speed.", new AcceptableValueRange<float>(0.5f, 2f)));
             Volume = cfg.Bind("Voice", "Volume", 1.0f, new ConfigDescription("Output gain (own stage, 2 = 200%).", new AcceptableValueRange<float>(0f, 2f)));
             Noise = cfg.Bind("Voice", "Noise", 0.5f, new ConfigDescription("Phoneme randomness (lower = steadier).", new AcceptableValueRange<float>(0f, 1.5f)));
             Variation = cfg.Bind("Voice", "Variation", 1.0f, new ConfigDescription("Expressiveness variation.", new AcceptableValueRange<float>(0f, 1.5f)));

@@ -41,17 +41,26 @@ and cleaner, with zero downloads beyond kilobytes. Only ever run one of them.
 
 **General**
 - Enabled — master switch. Off = mod fully idle, game speech behaves stock.
-- SpeakOwnDev — also speak your own messages (off by default; mostly for
-  testing your setup).
+- HearMyMessages — also speak your own messages (on by default).
+- TestNow — set TRUE for a spoken test line (auto-resets; proves the engine
+  is alive without needing chat traffic).
+- SpeakServerAnnouncements — speak server lines (notices, broadcasts) when
+  the server sends them (on by default).
+- Status — live readout (read-only): `idle`, or `OFF: enable Text To Speech
+  in game settings` when the game's own TTS switch is off.
 - LogLevel — 0 = errors only, 1 = normal, 2 = per-message debug trace.
   Set to 2 only when collecting a bug report, then back to 1.
+
+> **Requires the game's Text To Speech switch ON** (game settings). The mod
+> learns about chat lines through the game's own speech trigger, so with the
+> switch off there is nothing to speak — Status tells you.
 
 **Voice**
 - AnnounceNames — speak `<name> says:` before lines (on by default). Turn it
   OFF to play announcer-free: every player keeps their own stable voice, so
   you learn who's talking by sound alone.
 - AnnouncerSid — which of the 904 voices reads the names (0–903, default 1).
-- Speed — base speaking rate, 0.5–2 (default 1).
+- Speed — base speaking rate, 0.5–2 (default 0.75).
 - Volume — our own output gain, 0–2 (2 = 200%).
 - Noise — phoneme randomness, 0–1.5 (default 0.5; lower = steadier voice).
 - Variation — expressiveness variation, 0–1.5 (default 1).
@@ -60,7 +69,7 @@ and cleaner, with zero downloads beyond kilobytes. Only ever run one of them.
 
 **Queue**
 - CatchUpSec — how many seconds of speech backlog before the rate ramps up
-  to catch up (2–30, default 3).
+  to catch up (2–30, default 6).
 
 **Storage**
 - LogDays — keep the speech audit log this many days, 0–30 (default 7,
@@ -79,7 +88,7 @@ Set F1 → LogLevel = 2, reproduce, then send:
 Set LogLevel back to 1 afterwards. `tts-log.txt` contains chat text you heard
 plus player names — only share it if you are comfortable sharing that session.
 
-## Known issues (v1.0.0)
+## Known issues (v1.0.1)
 
 - **Rename popup vs chat focus:** while typing a name in the Rename TTS
   popup, pressing SPACE or `-` hands focus to the game chat and the popup

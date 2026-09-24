@@ -74,6 +74,12 @@ namespace TtsExpander
                 return;
             }
             bool noAnn = string.Equals((playerName ?? "").Trim(), "server", StringComparison.OrdinalIgnoreCase);
+            if (noAnn && !ModConfig.SpeakServer.Value)
+            {
+                if (ModConfig.Dbg)
+                    Plugin.Log?.LogInfo($"QUEUE skip server (SpeakServerAnnouncements off): '{message}'");
+                return;
+            }
             lock (QueueLock)
             {
                 DateTime now = DateTime.UtcNow;
@@ -134,6 +140,7 @@ namespace TtsExpander
         private static bool _synthing;
         private static ReadyClip? _prefetched;
         private static float _lastBeat;
+        private static float _lastTtsWarn;
         private static string _lastAnnouncedKey = "";
         private static DateTime _lastAnnounceTime = DateTime.MinValue;
 
@@ -160,9 +167,29 @@ namespace TtsExpander
         {
             try
             {
+#if !LITE
+            if (ModConfig.TestNow.Value)
+            {
+                ModConfig.TestNow.Value = false;
+                SpeakLocal("Handy TTS test. Voices online.");
+            }
+#endif
             if (Time.time - _lastBeat > 10f)
             {
                 _lastBeat = Time.time;
+#if !LITE
+                try
+                {
+                    bool master = PlayerSettings.chatTts;
+                    ModConfig.FullStatus.Value = master ? "idle" : "OFF: enable Text To Speech in game settings";
+                    if (!master && Time.time - _lastTtsWarn > 60f)
+                    {
+                        _lastTtsWarn = Time.time;
+                        Plugin.Log?.LogWarning("Game TTS is OFF: no chat lines reach the mod. Enable Text To Speech in game settings.");
+                    }
+                }
+                catch { }
+#endif
                 if (ModConfig.Dbg)
                 {
                     int n;
